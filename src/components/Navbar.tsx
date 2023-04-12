@@ -4,8 +4,11 @@ import {
   SignedOut,
   SignInButton,
   UserButton,
+  useUser,
 } from "@clerk/nextjs";
+import Link from "next/link";
 export default function Navbar() {
+  const { isSignedIn } = useUser();
   return (
     <nav className="border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800">
       <div className="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-4">
@@ -53,11 +56,18 @@ export default function Navbar() {
               </a>
             </li>
             <li className="block rounded bg-blue-700 py-2 pl-3 pr-4 text-white dark:bg-blue-600 md:bg-transparent md:p-0 md:text-blue-700 md:dark:bg-transparent md:dark:text-blue-500">
-              <SignInButton>Sign In</SignInButton>
+              <Link href="sell-an-item">Sell an item</Link>
             </li>
-            <li>
-              <UserButton />
-            </li>
+
+            {!isSignedIn ? (
+              <li className="block rounded bg-blue-700 py-2 pl-3 pr-4 text-white dark:bg-blue-600 md:bg-transparent md:p-0 md:text-blue-700 md:dark:bg-transparent md:dark:text-blue-500">
+                <SignInButton>Sign In</SignInButton>
+              </li>
+            ) : (
+              <li>
+                <UserButton />
+              </li>
+            )}
           </ul>
         </div>
       </div>
