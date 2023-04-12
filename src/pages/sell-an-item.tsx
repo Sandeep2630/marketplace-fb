@@ -11,14 +11,17 @@ type Inputs = {
 };
 
 const SellItem: NextPage = () => {
-  //   const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const createListings = api.listing.create.useMutation();
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm<Inputs>();
-  const onSubmit = (data: Inputs) => console.log(data);
+
+  const onSubmit = (data: Inputs) => {
+    createListings.mutateAsync({...data });
+  };
 
   return (
     <>
@@ -67,7 +70,7 @@ const SellItem: NextPage = () => {
               type="number"
               step="0.01"
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-              {...register("price", { required: true })}
+              {...register("price", { required: true , })}
             />
           </div>
           <button
