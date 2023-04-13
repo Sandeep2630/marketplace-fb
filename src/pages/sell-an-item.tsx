@@ -1,5 +1,6 @@
 import { type NextPage } from "next";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
 import { api } from "~/utils/api";
@@ -7,10 +8,11 @@ import { api } from "~/utils/api";
 type Inputs = {
   name: string;
   description: string;
-  price: number;
+  price: string;
 };
 
 const SellItem: NextPage = () => {
+  const router = useRouter();
   const createListings = api.listing.create.useMutation();
   const {
     register,
@@ -19,8 +21,16 @@ const SellItem: NextPage = () => {
     formState: { errors },
   } = useForm<Inputs>();
 
-  const onSubmit = (data: Inputs) => {
-    createListings.mutateAsync({...data });
+  const onSubmit = async (data: Inputs) => {
+    try {
+      await createListings.mutateAsync({
+        ...data,
+        price: parseFloat(data.price),
+      });
+      router.push("/");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -70,7 +80,7 @@ const SellItem: NextPage = () => {
               type="number"
               step="0.01"
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-              {...register("price", { required: true , })}
+              {...register("price", { required: true })}
             />
           </div>
           <button
